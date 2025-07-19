@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JabiBot Installer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    #ipDisplay {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+
+    p.note {
+      font-size: 0.95rem;
+      background: #fffbe5;
+      padding: 1rem;
+      border-left: 4px solid #f0ad4e;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1.25rem;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    button {
+      margin-top: 2rem;
+      padding: 0.75rem;
+      width: 100%;
+      font-weight: bold;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005f99;
+    }
+  </style>
+</head>
+<body>
+  <h1>JabiBot Installer</h1>
+  <div id="ipDisplay">(detecting local IP...)</div>
+
+  <p class="note">
+    <strong>Security Notice:</strong><br />
+    This installer is running <em>locally on your own device or Raspberry Pi</em> — your keys are never sent to the cloud.  
+    Only paste your Discord, YouTube, or Spotify credentials here if you trust the machine you're on.  
+    <strong>Never share these keys publicly or paste them into untrusted websites or bots.</strong><br /><br />
+    Visit the <a href="https://github.com/museofficial/muse" target="_blank">JabiBot GitHub repo</a> for help generating these values.
+  </p>
+
+  <form id="envForm">
+    <label>
+      Discord Bot Token:
+      <input type="password" name="DISCORD_TOKEN" required />
+    </label>
+
+    <label>
+      YouTube API Key:
+      <input type="text" name="YOUTUBE_API_KEY" required />
+    </label>
+
+    <label>
+      Spotify Client ID:
+      <input type="text" name="SPOTIFY_CLIENT_ID" required />
+    </label>
+
+    <label>
+      Spotify Client Secret:
+      <input type="password" name="SPOTIFY_CLIENT_SECRET" required />
+    </label>
+
+    <button type="submit">Save .env</button>
+  </form>
+
+  <script>
+    // Show detected local IP
+    fetch('/get-ip')
+      .then(res => res.json())
+      .then(data => {
+        const ipDisplay = document.getElementById('ipDisplay');
+        ipDisplay.innerHTML = `➡️ Access this installer at: <strong>http://${data.ip}:3000</strong>`;
+      })
+      .catch(() => {
+        document.getElementById('ipDisplay').textContent = '(Could not detect IP address)';
+      });
+
+    // Handle form submit
+    document.getElementById('envForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const json = {};
+      formData.forEach((value, key) => json[key] = value);
+
+      const res = await fetch('/save', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(json)
+      });
+
+      const result = await res.text();
+      alert(result);
+    });
+  </script>
+</body>
+</html>
