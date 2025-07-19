@@ -27,7 +27,7 @@ JabiBot makes sense for people who want control, privacy, and affordability:
 | Raspberry Pi 4B      | ~$0.50–0.90 (energy)   |
 | Raspberry Pi Zero 2W | ~$0.20–0.40            |
 
-A Pi costs 5–10x less to run 24/7 than even the cheapest cloud hosts — and you own the hardware.
+A Pi costs 5–10x less to run 24/7 than even the cheapest cloud hosts, while you have full ownership and control the hardware.
 
 ### Educational Value
 
@@ -129,9 +129,9 @@ Edit the `.env` file created during setup. These tokens are required:
 | SPOTIFY_CLIENT_ID    | [Spotify Developers](https://developer.spotify.com/dashboard/) |
 | SPOTIFY_CLIENT_SECRET| [Spotify Developers](https://developer.spotify.com/dashboard/) |
 
-Do not share this file or commit it to GitHub.
+Do NOT share this file or commit it to GitHub.
 
-> A web-based `.env` generator is planned to help avoid editing on the Pi directly.
+> A web-based `.env` generator is planned to help avoid editing on the Pi directly for non-programmers (or people who hate writing code in a terminal). This will also ensure safety for non-technical users.
 
 ---
 
@@ -148,7 +148,7 @@ Do not share this file or commit it to GitHub.
 
 ## Credit
 
-JabiBot is a fork of [Muse Bot](https://github.com/museofficial/muse) — credit to them for the original music engine, cache logic, core functionality, and fantastic jumping-off point.
+JabiBot is a fork of [Muse Bot](https://github.com/museofficial/muse) Credit to them for the original music engine, cache logic, core functionality, and fantastic jumping-off point.
 
 ---
 
