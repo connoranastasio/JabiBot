@@ -1,149 +1,157 @@
-<p align="center">
-  <img width="250" height="250" src="https://raw.githubusercontent.com/museofficial/muse/master/.github/logo.png">
-</p>
+# JabiBot
 
-> [!WARNING]
-> I ([@codetheweb](https://github.com/codetheweb)) am no longer the primary maintainer of Muse. **If you use the Docker image, update your image source to `ghcr.io/museofficial/muse`.** We are currently publishing new releases to both `ghcr.io/museofficial/muse` and `codetheweb/muse`, but this may change in the future.
-> Thank you to all the people who stepped up to help maintain Muse!
+JabiBot is a self-hosted Discord music bot forked from [Muse](https://github.com/museofficial/muse), redesigned to be easy to run on a Raspberry Pi — even for people who don’t code.
 
-------
+This project prioritizes:
 
-Muse is a **highly-opinionated midwestern self-hosted** Discord music bot **that doesn't suck**. It's made for small to medium-sized Discord servers/guilds (think about a group the size of you, your friends, and your friend's friends).
+- Ease of use for beginners  
+- Raspberry Pi compatibility  
+- Customization during install  
+- Real data science integrations  
 
-![Hero graphic](.github/hero.png)
+If you’ve never hosted a Discord bot before, JabiBot is a great place to start.
+
+---
+
+## Why JabiBot Is Worth Building
+
+JabiBot makes sense for people who want control, privacy, and affordability:
+
+### Cost Comparison: Raspberry Pi vs Cloud Hosting
+
+| Platform             | Estimated Monthly Cost |
+|----------------------|------------------------|
+| AWS (t2.micro)       | $10–14                 |
+| Google Cloud VM      | $7–12                  |
+| DigitalOcean Droplet | $4–10                  |
+| Raspberry Pi 4B      | ~$0.50–0.90 (energy)   |
+| Raspberry Pi Zero 2W | ~$0.20–0.40            |
+
+A Pi costs 5–10x less to run 24/7 than even the cheapest cloud hosts — and you own the hardware.
+
+### Educational Value
+
+- Learn Docker, Linux, SQLite, and the Discord API  
+- Work with tokens, secrets, and secure environments  
+- Apply data science skills to real bot behavior  
+- Fully usable on a resume as a backend systems project  
+
+### Platform Compatibility
+
+Although JabiBot is designed with Raspberry Pi in mind, it runs on **any Linux-based device** that supports Docker, including:
+
+- Desktop or laptop Linux machines  
+- Linux VMs (e.g., on cloud providers)  
+- ARM boards like Jetson Nano or Orange Pi  
+- x86 servers or old computers repurposed for bot hosting
+
+**NOTE**: We highlight the Pi because it's affordable, low-power, and an excellent tool for learning to code and work with real systems. However, it does come with limitations. Future features will be optimized for Raspberry Pi compatibility, but optional late-stage additions (like AI or real-time analytics) may require more powerful hardware. Where possible, lightweight alternatives will be explored.
+
+JabiBot is built around:
+
+- Simplicity and beginner access  
+- Portability and Dockerized deployment  
+- Modular, opt-in features  
+- Customization based on available system resources  
+
+---
 
 ## Features
 
-- 🎥 Livestreams
-- ⏩ Seeking within a song/video
-- 💾 Local caching for better performance
-- 📋 No vote-to-skip - this is anarchy, not a democracy
-- ↔️ Autoconverts playlists / artists / albums / songs from Spotify
-- ↗️ Users can add custom shortcuts (aliases)
-- 1️⃣ Muse instance supports multiple guilds
-- 🔊 Normalizes volume across tracks
-- ✍️ Written in TypeScript, easily extendable
-- ❤️ Loyal Packers fan
+### Core Functionality (inherited from Muse)
 
-## Running
+- Joins Discord voice channels  
+- Plays music from YouTube and Spotify  
+- Auto-ducks volume when people speak  
+- Caches files for efficient replays  
+- Dockerized and portable  
 
-Muse is written in TypeScript. You can either run Muse with Docker (recommended) or directly with Node.js. Both methods require API keys passed in as environment variables:
+### Planned Features
 
-- `DISCORD_TOKEN` can be acquired [here](https://discordapp.com/developers/applications) by creating a 'New Application', then going to 'Bot'.
-- `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` can be acquired [here](https://developer.spotify.com/dashboard/applications) with 'Create a Client ID' (Optional).
-- `YOUTUBE_API_KEY` can be acquired by [creating a new project](https://console.developers.google.com) in Google's Developer Console, enabling the YouTube API, and creating an API key under credentials.
+- Bot usage dashboard (songs played, guilds, uptime, errors)  
+- Plug-and-play feature modules during install  
+- Queue + usage analytics (time-series, patterns, metadata)  
+- Remote USB file server support  
+- Web-based `.env` generator for easier onboarding  
 
-Muse will log a URL when run. Open this URL in a browser to invite Muse to your server. Muse will DM the server owner after it's added with setup instructions.
+---
 
-A 64-bit OS is required to run Muse.
+## Recommended Hardware
 
-### Versioning
+- Raspberry Pi 4 Model B (4GB or 8GB)  
+- 32GB+ A1-rated microSD card  
+- Heatsinks, fan or case  
+- Ethernet or Wi-Fi  
+- Official Pi USB-C power adapter  
 
-The `master` branch acts as the developing / bleeding edge branch and is not guaranteed to be stable.
+Optional:
+- External USB hard drive for media cache or file sharing  
+- USB microphone or sound card for future extensions  
 
-When running a production instance, I recommend that you use the [latest release](https://github.com/museofficial/muse/releases/).
+---
 
+## Installation
 
-### 🐳 Docker
-
-There are a variety of image tags available:
-- `:2`: versions >= 2.0.0
-- `:2.1`: versions >= 2.1.0 and < 2.2.0
-- `:2.1.1`: an exact version specifier
-- `:latest`: whatever the latest version is
-
-(Replace empty config strings with correct values.)
+Install Docker + Docker Compose:
 
 ```bash
-docker run -it -v "$(pwd)/data":/data -e DISCORD_TOKEN='' -e SPOTIFY_CLIENT_ID='' -e SPOTIFY_CLIENT_SECRET='' -e YOUTUBE_API_KEY='' ghcr.io/museofficial/muse:latest
+sudo apt update
+sudo apt install docker.io docker-compose -y
+sudo systemctl enable docker
 ```
 
-This starts Muse and creates a data directory in your current directory.
+Clone and run:
 
-You can also store your tokens in an environment file and make it available to your container. By default, the container will look for a `/config` environment file. You can customize this path with the `ENV_FILE` environment variable to use with, for example, [docker secrets](https://docs.docker.com/engine/swarm/secrets/). 
-
-**Docker Compose**:
-
-```yaml
-services:
-  muse:
-    image: ghcr.io/museofficial/muse:latest
-    restart: always
-    volumes:
-      - ./muse:/data
-    environment:
-      - DISCORD_TOKEN=
-      - YOUTUBE_API_KEY=
-      - SPOTIFY_CLIENT_ID=
-      - SPOTIFY_CLIENT_SECRET=
+```bash
+curl -O https://raw.githubusercontent.com/connoranastasio/JabiBot/main/install.sh
+chmod +x install.sh
+./install.sh
 ```
 
-### Node.js
+This will:
 
-**Prerequisites**:
-* Node.js (18.17.0 or latest 18.xx.xx is required and latest 18.x.x LTS is recommended) (Version 18 due to opus dependency)
-* ffmpeg (4.1 or later)
+- Clone the latest repo  
+- Create folders  
+- Copy a template `.env`  
+- Prompt for token entry  
+- Launch the bot  
 
-1. `git clone https://github.com/museofficial/muse.git && cd muse`
-2. Copy `.env.example` to `.env` and populate with values
-3. I recommend checking out a tagged release with `git checkout v[latest release]`
-4. `yarn install` (or `npm i`)
-5. `yarn start` (or `npm run start`)
+---
 
-**Note**: if you're on Windows, you may need to manually set the ffmpeg path. See [#345](https://github.com/museofficial/muse/issues/345) for details.
+## Environment Configuration
 
-## ⚙️ Additional configuration (advanced)
+Edit the `.env` file created during setup. These tokens are required:
 
-### Cache
+| Key                  | Where to Get It |
+|----------------------|-----------------|
+| DISCORD_TOKEN        | [Discord Developer Portal](https://discord.com/developers/applications) |
+| YOUTUBE_API_KEY      | [Google Cloud Console](https://console.cloud.google.com/) |
+| SPOTIFY_CLIENT_ID    | [Spotify Developers](https://developer.spotify.com/dashboard/) |
+| SPOTIFY_CLIENT_SECRET| [Spotify Developers](https://developer.spotify.com/dashboard/) |
 
-By default, Muse limits the total cache size to around 2 GB. If you want to change this, set the environment variable `CACHE_LIMIT`. For example, `CACHE_LIMIT=512MB` or `CACHE_LIMIT=10GB`.
+Do not share this file or commit it to GitHub.
 
-### SponsorBlock
+> A web-based `.env` generator is planned to help avoid editing on the Pi directly.
 
-Muse can skip non-music segments at the beginning or end of a Youtube music video (Using [SponsorBlock](https://sponsor.ajay.app/)). It is disabled by default. If you want to enable it, set the environment variable `ENABLE_SPONSORBLOCK=true` or uncomment it in your .env.
-Being a community project, the server may be down or overloaded. When it happen, Muse will skip requests to SponsorBlock for a few minutes. You can change the skip duration by setting the value of `SPONSORBLOCK_TIMEOUT`.
+---
 
-### Custom Bot Status
+## Roadmap
 
-In the default state, Muse has the status "Online" and the text "Listening to Music". You can change the status through environment variables:
+- Optional install-time configuration  
+- Analytics-ready database for queue + playback logs  
+- Minimal web interface for admin/stats  
+- SFTP or Samba server for media file access  
+- Resume-focused modules to flex real backend skills  
+- Experimental AI integration (likely not Pi-compatible)  
 
-- `BOT_STATUS`:
-  - `online` (Online)
-  - `idle` (Away)
-  - `dnd` (Do not Disturb)
+---
 
-- `BOT_ACTIVITY_TYPE`:
-  - `PLAYING` (Playing XYZ)
-  - `LISTENING` (Listening to XYZ)
-  - `WATCHING` (Watching XYZ)
-  - `STREAMING` (Streaming XYZ)
+## Credit
 
-- `BOT_ACTIVITY`: the text that follows the activity type
+JabiBot is a fork of [Muse Bot](https://github.com/museofficial/muse) — credit to them for the original music engine, cache logic, core functionality, and fantastic jumping-off point.
 
-- `BOT_ACTIVITY_URL` If you use `STREAMING` you MUST set this variable, otherwise it will not work! Here you write a regular YouTube or Twitch Stream URL.
+---
 
-#### Examples
+## License
 
-**Muse is watching a movie and is DND**:
-- `BOT_STATUS=dnd`
-- `BOT_ACTIVITY_TYPE=WATCHING`
-- `BOT_ACTIVITY=a movie`
-
-**Muse is streaming Monstercat**:
-- `BOT_STATUS=online`
-- `BOT_ACTIVITY_TYPE=STREAMING`
-- `BOT_ACTIVITY_URL=https://www.twitch.tv/monstercat`
-- `BOT_ACTIVITY=Monstercat`
-
-### Bot-wide commands
-
-If you have Muse running in a lot of guilds (10+) you may want to switch to registering commands bot-wide rather than for each guild. (The downside to this is that command updates can take up to an hour to propagate.) To do this, set the environment variable `REGISTER_COMMANDS_ON_BOT` to `true`.
-
-### Automatically turn down volume when people speak
-
-You can configure the bot to automatically turn down the volume when people are speaking in the channel using the following commands:
-
-- `/config set-reduce-vol-when-voice true` - Enable automatic volume reduction
-- `/config set-reduce-vol-when-voice false` - Disable automatic volume reduction
-- `/config set-reduce-vol-when-voice-target <volume>` - Set the target volume percentage when people speak (0-100, default is 70)
-
+MIT License. See `LICENSE`.
