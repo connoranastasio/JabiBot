@@ -24,37 +24,44 @@ function getLocalIP() {
   return 'localhost';
 }
 
-// GET /get-ip — used by HTML frontend
+// GET /get-ip — used by frontend to display IP
 app.get('/get-ip', (req, res) => {
   res.json({ ip: getLocalIP() });
 });
 
-// POST /save — save .env file
+// POST /save — write .env file
 app.post('/save', (req, res) => {
   const envData = {
     ...req.body,
-    DATA_DIR: './data', // Inject uneditable constant
+    DATA_DIR: './data', // Always hardcoded
   };
 
+  // Warn about quotes in input values
+  Object.entries(envData).forEach(([key, value]) => {
+    if (value.includes('"')) {
+      console.warn(`Warning: ${key} contains a quote. This may break parsing.`);
+    }
+  });
+
   const envLines = Object.entries(envData)
-    .map(([key, value]) => `${key}="${value.replace(/"/g, '\\"')}"`)
+    .map(([key, value]) => `${key}=${value.trim()}`)
     .join('\n');
 
   const envPath = path.resolve(__dirname, '../.env');
 
   try {
     fs.writeFileSync(envPath, envLines + '\n');
-    console.log('✅ .env file saved successfully!');
-    res.send('✅ .env saved successfully!');
+    console.log('.env file saved successfully.');
+    res.send('.env saved successfully.');
   } catch (err) {
-    console.error('❌ Error writing .env file:', err);
-    res.status(500).send('❌ Failed to save .env.');
+    console.error('Error writing .env file:', err);
+    res.status(500).send('Failed to save .env.');
   }
 });
 
-// Start server and display access info
+// Start server and print access info
 app.listen(PORT, () => {
   const ip = getLocalIP();
-  console.log(`🌐 JabiBot Installer running!`);
-  console.log(`➡️  Open in your browser: http://${ip}:${PORT}`);
+  console.log('JabiBot Web Installer is running.');
+  console.log(`Open your browser and go to: http://${ip}:${PORT}`);
 });
